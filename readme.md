@@ -1,6 +1,6 @@
 # Advanced Script Template
 
-An advanced template with all the bells and whistles in script format
+API Building Resource for ColdBox
 
 ## License
 Apache License, Version 2.0.
