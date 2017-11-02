@@ -1,0 +1,12 @@
+{
+    "dependencies":{
+        "coldbox":"^4.3.0+188"
+    },
+    "installPaths":{
+        "coldbox":"coldbox",
+        "testbox":"testbox"
+    },
+    "devDependencies":{
+        "testbox":"^2.5.0+107"
+    }
+}
