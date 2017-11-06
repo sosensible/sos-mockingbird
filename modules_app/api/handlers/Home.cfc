@@ -1,9 +1,15 @@
 /**
 * A normal ColdBox Event Handler
 */
+
 component{
 
+	property name="MockData" inject="MockData@MockDataCFC";
+
 	function index(event,rc,prc){
+		local.params = {num:'rnd:7',user:"name", email:"email"};
+		prc['person'] = mockData.mock(argumentcollection:params);
+
 		event.setView( "home/index" );
 	}
 

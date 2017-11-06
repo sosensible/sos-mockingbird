@@ -1,10 +1,20 @@
 {
     "dependencies":{
-        "coldbox":"^4.3.0+188"
+        "coldbox":"^4.3.0+188",
+        "str":"^1.0.0",
+        "CFCollection":"^3.3.0",
+        "CFFractal":"^6.1.0",
+        "JSONToRC":"^1.0.3",
+        "MockDataCFC":"^2.3.0"
     },
     "installPaths":{
-        "coldbox":"coldbox",
-        "testbox":"testbox"
+        "coldbox":"coldbox\\",
+        "testbox":"testbox\\",
+        "str":"modules\\str\\",
+        "JSONToRC":"modules\\JSONToRC\\",
+        "cfcollection":"modules\\cfcollection\\",
+        "cffractal":"modules\\cffractal",
+        "mockdatacfc":"modules\\mockdatacfc"
     },
     "devDependencies":{
         "testbox":"^2.5.0+107"
