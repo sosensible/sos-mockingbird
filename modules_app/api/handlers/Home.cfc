@@ -13,13 +13,13 @@ component{
 		event.setView( "home/index" );
 	}
 
-	function data(event,rc,prc){
-		event.renderData(data: session, statusCode: 200, type="json");
-	}
+	// function data(event,rc,prc){
+	// 	event.renderData(data: application, statusCode: 200, type="json");
+	// }
 
-	function impress(event,rc,prc){
-		event.setView( "home/impress" );
-	}
+	// function impress(event,rc,prc){
+	// 	event.setView( "home/impress" );
+	// }
 	
 	function test(event,rc,prc){
 		event.setView( "home/test" );

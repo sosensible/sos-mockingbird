@@ -88,7 +88,9 @@ component {
 		};
 
 		// SES Routes
-		include "routes/route.cfm";
+		routes = [];
+		include "routes/_.cfm";
+		application.routes = routes;
 
 		// Custom Declared Points
 		interceptorSettings = {

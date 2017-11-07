@@ -13,24 +13,24 @@ component{
 			route.deleteAt(1);
 		}
 		if(route.first() == 'clear'){
-			structDelete(SESSION,'handler');
+			structDelete(application,'handler');
 		}
 		this.setDefaultHandlers();
 		/*** matchLen can only be less than pattern for ? cases ***/
 		try{
-			retValue = this.match( route, SESSION.handler.active, verb );
+			retValue = this.match( route, application.handler.active, verb );
 			
 			if(retValue.statusCode = 999) {
-				this.addMissingHandler(SESSION.handler.missing, route, verb);
-				// dump(var:session.handler, format:'classic', label: 'handler sets');
-				rc.missingHandlers = SESSION.handler.missing;
+				this.addMissingHandler(application.handler.missing, route, verb);
+				// dump(var:application.handler, format:'classic', label: 'handler sets');
+				rc.missingHandlers = application.handler.missing;
 				event.setView( 'mockingbird/missing' );
 			} else {
 				event.renderData(data: retValue.response, statusCode: retValue.statusCode, type="json");
 			}
 		} catch (e){
 			dump(var:e, format:'classic');
-			dump(var:session.handler, format:'classic', label: 'handlers');
+			dump(var:application.handler, format:'classic', label: 'handlers');
 			dump(var:retValue, format:'classic');
 			abort;
 		}
@@ -50,9 +50,6 @@ component{
 		};
 		LOCAL.handler = {};
 		LOCAL.matchSet = [];
-		// dump(var: response, format: 'classic', label:'response value');
-		// match first handler that aligns with the route.
-		// dump(var: handlers, format: 'classic', label:'handlers preloop');
 
 		for (handler in handlers) {
 			match = false;
@@ -62,44 +59,31 @@ component{
 			try{
 				if(!handler.verb.len() || handler.verb.contains(verb)) {
 					if(routeLen >= handler.matchLen) {
-						// writeOutput('<hr>handler (#handler.matchLen#) LTE route (#routeLen#)<hr>');
 						match = true;
 						rc = {};
 						for(i = 1; i <= matchLen; i++){
 							item = handler.pattern[i];
-							// writeOutput('<hr>#route[i]# : #item#<br>');
 							if(right(item, 1) == '?') {
 								if(left(item, 1) == ':') {
 									item = right(item, len(item) -1);
 									rc[item] = route[i];
 								}
 							}  else {
-								// writeOutput('<hr>no ?<br>');
 								if(route[i] != item) {
-									// writeOutput('<hr>item not match<br>');
 									if(left(item, 1) == ':') {
-										// writeOutput('<hr>substite<br>');
-										// writeOutput('<hr>#item# as #route[i]#<hr>');
 										item = right(item, len(item) -1);
 										rc[item] = route[i];
 									} else {
-										// writeOutput('<hr>match item<br>');
-										// writeOutput('#item#<br>');
 										match = false;
 										i = matchLen;
 									}
-								} else {
-									// writeOutput('#item#<br>');
-								}
+								} 
 							}
 							if(i == matchLen && match) {
 								response = handler.response;
 								return { response:response.content, statusCode: response.statusCode, rc: rc };
 							}
 						}
-						// writeOutput('<hr>');
-					} else {
-						// writeOutput('<hr>handler len GT route len<hr>');
 					}
 				} else {
 					return {
@@ -116,53 +100,26 @@ component{
 				abort;
 			}
 		}
-		
-		// writeOutput('<hr>end match check<hr>');
 
 		return { response:response.content, statusCode: response.statusCode, rc: rc };
 	}
 
 	private void function addMissingHandler(missingHandlers, route, verb) {
-		// dump(var:missingHandlers, format: 'classic', label: 'missingHandlers');abort;
 		verb = 'POST';
 		LOCAL.handler = [];
 		LOCAL.routesMatch = false;
 		LOCAL.i = 0;
 		for(i=1; i <= missingHandlers.len(); i++){
-			// writeOutput('start handler loop check (#i#)');
-			// cfflush();
 			handler =  missingHandlers[i];
-			// writeOutput('<hr>');
-			// cfflush();
-			// dump(var:{logic: true || handler.matchlen, count: missingHandlers.len(), route:route, handler:handler, verb: handler.verb, route:handler.pattern}, format: 'classic', label: 'missHandler[#i#]');
-			// cfflush();
-			// if( i == 3 ) {
-			// 	dump(var:{logic:this.doRoutesMatch(route, handler.pattern, handler.matchLen)}, format: 'classic', label: 'logic');
-			// 	cfflush();
-				// abort; 
-			// }
-			// handler.matchlen && 
-			// if( i == 3 ) { return; }
 			routesMatch = this.doRoutesMatch(route, handler.pattern, handler.matchLen);
-			// writeOutput(routesMatch);
-			// cfflush();
 			if( routesMatch ){
-				// return;
-				// dump(var:{ route:route, handler:handler, verb: handler.verb, routeSet:handler.pattern}, format: 'classic', label: 'missHandler[#i#]');
 				if( !handler.verb.findNoCase( verb ) ){
 					handler.verb.append( verb );
 				}
-				// abort;
 				return;
 			}
-			// writeOutput('<br>end handler loop check (#i#)');
-			// cfflush();
-			// if( i == 3 ) { return; }
 		}
-		// writeOutput('post handler loop check');
-		// cfflush();
-		// return;
-		session.handler.missing.append({
+		application.handler.missing.append({
 			'id': createGUID(),
 			'pattern': route,
 			'matchlen': route.len(),
@@ -172,22 +129,36 @@ component{
 		});
 	}
 
+	function morph(event,rc,prc){
+		if(structKeyExists(rc,'catchset')){
+			local.template = {};
+			try {
+				include "../template/#rc.catchset#.cfm";
+				event.setView( "mockingbird/morphform" );
+			} catch(e) {
+				writeOutput('Invalid address');
+				abort;
+			}
+		}
+		// writeDump(var: rc, format: 'classic');
+		// abort;
+	}
+
+	function build(event,rc,prc){
+
+		event.setView( "mockingbird/build" );
+	}
+
+	private function pickOutHandler(handlers:APPLICATION.handler, id){
+
+	}
+
 	private any function doRoutesMatch(endPointRoute, checkRoute, matchLen) {
 		LOCAL.i = 0;
-		// dump(
-		// 	var:{
-		// 		args:arguments, 
-		// 		epr: endPointRoute.len(), 
-		// 		cr: checkRoute.len()
-		// 	}, 
-		// 	format:'classic', 
-		// 	label:'doRoutesMatch'
-		// );
 		if( endPointRoute.len() <> checkRoute.len() ){
 			return false;
 		} else {
 			for(i=1; i <= endPointRoute.len(); i++){
-				// dump(var: {ep: endPointRoute[i], cr: checkRoute[i]}, format:'classic');
 				if(endPointRoute[i] != checkRoute[i]){
 					return false;
 				}
@@ -198,8 +169,8 @@ component{
 
 	private void function setDefaultHandlers() {
 		
-		if(!structKeyExists(session, 'handler')){
-			SESSION['handler'] = {
+		if(!structKeyExists(application, 'handler')){
+			application['handler'] = {
 				'missing': [],
 				'active': [
 					{

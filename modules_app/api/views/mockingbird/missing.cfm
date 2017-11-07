@@ -17,7 +17,12 @@
             <td><cfoutput>#handler.matchlen#</cfoutput></td>
             <td><cfdump var="#handler.response#"></td>
             <td><cfdump var="#handler.verb#"></td>
-            <td><cfoutput><a href="/api/morph/#handler.id#">Morph</a></cfoutput></td>
+            <td><cfoutput>
+                <a href="/api/morph/#handler.id#">Morph</a><br>
+                <a href="/api/morph/#handler.id#/bread">BREAD</a><br>
+                <a href="/api/morph/#handler.id#/crud">CRUD</a><br>
+                <a href="/api/morph/#handler.id#/delete">Delete</a><br>
+            </cfoutput></td>
             <td><cfoutput>#handler.route#</cfoutput></td>
         </tr>
     </tbody>

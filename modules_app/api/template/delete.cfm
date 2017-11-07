@@ -1,0 +1,3 @@
+<cfscript>
+/* *** delete template *** */
+</cfscript>
