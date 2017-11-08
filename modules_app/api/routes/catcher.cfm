@@ -1,7 +1,8 @@
 <cfscript>
 // routes for the catcher
 catchRoutes = [
-    { pattern="/morph/:id/:catchset?", handler="catch", action="morph" }
+    { pattern="/morph/:id/:catchset?", handler="catch", action="morph" },
+    { pattern="/build", handler="catch", action="build" }
 ];
 
 // replace default general handler

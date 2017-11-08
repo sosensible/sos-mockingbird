@@ -3,52 +3,53 @@
 prc['set'] = {
     'browse': {
         'handler': {
-            'handler': 'bread',
-            'action': 'browse'
+            'name': '#prc.handler.pattern[1]#',
+            'action': 'browse',
+            'verb': 'GET'
         },
         'route': {
-            'endpath': 'end/path',
+            'endpath': prc.handler.endpath,
             'verb': 'GET'
         }
     },
     'read': {
         'handler': {
-            'name': 'bread',
+            'name': '#prc.handler.pattern[1]#',
             'action': 'read',
             'verb': 'GET'
         },
         'route': {
-            'endpath': 'end/path/:id'
+            'endpath': '#prc.handler.endpath#/:id'
         }
     },
     'edit': {
         'handler': {
-            'name': 'bread',
+            'name': '#prc.handler.pattern[1]#',
             'action': 'edit',
             'verb': 'PUT'
         },
         'route': {
-            'endpath': 'end/path/:id'
+            'endpath': '#prc.handler.endpath#/:id'
         }
     },
     'add': {
         'handler': {
-            'name': 'bread',
+            'name': '#prc.handler.pattern[1]#',
             'action': 'add',
             'verb': 'POST'
         },
         'route': {
-            'endpath': 'end/path'
+            'endpath': prc.handler.endpath
         }
     },
     'delete': {
         'handler': {
-            'name': 'bread',
+            'name': '#prc.handler.pattern[1]#',
             'action': 'delete',
             'verb': 'DELETE'
         },
         'route': {
-            'endpath': 'end/path/:id'
+            'endpath': '#prc.handler.endpath#/:id'
         }
     }
 };

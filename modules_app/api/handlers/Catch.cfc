@@ -121,11 +121,12 @@ component{
 		}
 		application.handler.missing.append({
 			'id': createGUID(),
-			'pattern': route,
+			'endpath': route.toList('/'),
 			'matchlen': route.len(),
-			'verb': [ verb ],
+			'pattern': route,
 			'response': {},
-			'route': '{pattern:"/#route.toList('/')#", handler:"handlerName", action:"#route.first()#"}'
+			'route': '{pattern:"/#route.toList('/')#", handler:"handlerName", action:"#route.first()#"}',
+			'verb': [ verb ]
 		});
 	}
 
@@ -133,10 +134,13 @@ component{
 		if(structKeyExists(rc,'catchset')){
 			local.template = {};
 			try {
+				// dump(var:rc,format:'classic');abort;
+				prc.handler = this.pickOutHandler(handlers:APPLICATION.handler.missing, id:rc.id);
 				include "../template/#rc.catchset#.cfm";
 				event.setView( "mockingbird/morphform" );
 			} catch(e) {
 				writeOutput('Invalid address');
+				// dump(var:e,format:'classic');
 				abort;
 			}
 		}
@@ -145,12 +149,44 @@ component{
 	}
 
 	function build(event,rc,prc){
-
+		prc.handler = {};
+		local.route = {};
+		local.action = "";
+		local.sections = listToArray(rc.routes);
+		for(section in sections){
+			action = rc['#section#_action'];
+			if( !structKeyExists(prc.handler, rc['#section#_handler']) ){
+				prc.handler[rc['#section#_handler']] = {
+					'#action#': {
+						'verb': rc['#section#_verb'],
+						'pattern': rc['#section#_endpath'],
+						'handler': rc['#section#_handler'],
+						'action': #action#
+					}
+				};
+			} else {
+				prc.handler[rc['#section#_handler']][action] = {
+					'verb': rc['#section#_verb'],
+					'pattern': rc['#section#_endpath'],
+					'handler': rc['#section#_handler'],
+					'action': #action#
+				};
+			}
+		}
+		// dump(var:prc.handler, format:'classic');
+		// abort;
 		event.setView( "mockingbird/build" );
 	}
 
-	private function pickOutHandler(handlers:APPLICATION.handler, id){
-
+	private function pickOutHandler(handlers, id){
+		for(handler in handlers){
+			if(handler.id == arguments.id) {
+				return handler;
+			}
+			// dump(var:handler,format:'classic');
+			// dump(var:handlers,format:'classic');
+			// abort;
+		}
 	}
 
 	private any function doRoutesMatch(endPointRoute, checkRoute, matchLen) {

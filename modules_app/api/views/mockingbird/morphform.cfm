@@ -1,6 +1,6 @@
 <cfoutput>
 <form action="/api/build" encrypt="multipart/form-data" method="POST">
-    <h1>API Endroute Builder</h1>
+    <h1>API Endroute Builder Form</h1>
     <h2>morph (#ucase(rc.catchset)#) set</h2>
     
     <!--- <table>
@@ -26,34 +26,55 @@
         <input type="checkbox" name="routes" value="#segment#" id="seg_#segment#" checked="1">
         Include #segment# segment
     </label>
-    <table class="seg_#segment#">
+    <table class="seg_#segment# fullwidth">
         <caption>Route file.</caption>
         <thead>
             <tr>
-                <th>routes/#segment#.cfc
+                <th colspan="2" class="sec_head">
+                    routes/#segment#.cfc
                 </th>
             </tr>
         </thead>
         <tbody>
             <tr>
+                <th>
+                    Handler
+                </th>
                 <td>
-                    <textArea class="fullwidth"></textArea>
+                    <input type="text" name="#segment#_handler" class="fullwidth" value="#prc.set[segment].handler.name#">
+                </td>
+            </tr>
+        <tbody>
+            <tr>
+                <th>
+                    Action
+                </th>
+                <td>
+                    <input type="text" name="#segment#_action" class="fullwidth" value="#prc.set[segment].handler.action#">
+                </td>
+            </tr>
+        <tbody>
+            <tr>
+                <th>
+                    Verb
+                </th>
+                <td>
+                    <input type="text" name="#segment#_verb" class="fullwidth" value="#prc.set[segment].handler.verb#">
                 </td>
             </tr>
         </tbody>
-    </table>
-    <br>
-    <table class="seg_#segment#">
-        <caption>Handler file.</caption>
         <thead>
-            <tr>
-                <th>handlers/#segment#.cfm</th>
+            <tr class="sec_head">
+                <th colspan="2">handlers/#segment#.cfm</th>
             </tr>
         </thead>
         <tbody>
             <tr>
+                <th>
+                    EndPath (Pattern)
+                </th>
                 <td>
-                    <textArea class="fullwidth"></textArea>
+                    <input type="text" name="#segment#_endpath" class="fullwidth" value="#prc.set[segment].route.endpath#">
                 </td>
             </tr>
         </tbody>
@@ -63,7 +84,6 @@
     <input type="submit" value="Build Code">
 
 </form>
-
 <!--- <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script> --->
 <!--- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> --->
 <script><cfloop item="segment" collection="#prc.set#">
@@ -81,6 +101,9 @@ table {
 
 table td, table th {
     padding: 6px;
+}
+.sec_head {
+    color: blue;
 }
 
 .fullwidth {
