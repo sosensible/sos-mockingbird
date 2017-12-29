@@ -96,6 +96,15 @@ component extends="coldbox.system.testing.BaseTestCase" appMapping="/root"{
 
 			});
 
+			describe( "Jenkins Fail Test", function(){
+
+				it( "throws an exception", function(){
+				
+					expect(true).toBe(false);
+					
+				});
+			
+			});
 
 		});
 
